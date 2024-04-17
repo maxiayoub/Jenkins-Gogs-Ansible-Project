@@ -6,9 +6,10 @@ pipeline {
                 echo 'Hello world!' 
             }
         }
-		stage('Running Ansible')
+		stage('Running Ansible'){
 			steps{
 				ansiblePlaybook credentialsId: 'ansible_key', inventory: 'inventories/hosts', playbook: 'InstallNginx.yml'
 			}
+		}
     }
 }
