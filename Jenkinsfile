@@ -11,5 +11,11 @@ pipeline {
 				ansiblePlaybook credentialsId: 'ansible_key', inventory: 'inventories/hosts', playbook: 'InstallNginx.yml'
 			}
 		}
+		stage('Copy GroupMembers.sh to VM3'){
+        	sshagent(['ansible_key']){
+				sh "scp GroupMembers.sh root@192.168.44.21:"
+            	sh "ssh -o StrictHostKeyChecking=no root@192.168.44.21 'bash GroupMembers.sh'"
+        	}
+    	}
     }
 }
