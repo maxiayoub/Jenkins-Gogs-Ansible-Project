@@ -1,2 +1,2 @@
 [webservers]
-vm3 ansible_host=192.168.44.21 ansible_user=root ansible_password=123
+vm3 ansible_host=192.168.44.21
