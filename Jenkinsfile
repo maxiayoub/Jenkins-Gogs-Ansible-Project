@@ -21,7 +21,8 @@ pipeline {
 		}
     }
 	post {
-         script {
+		always{
+         	script {
                 def emailSubject = "CI Result: Project ${env.JOB_NAME} - Build #${env.BUILD_NUMBER}"
                 def emailBody = """
                 <b>Status:</b> ${currentBuild.currentResult}<br>
@@ -46,6 +47,7 @@ pipeline {
                     replyTo: '', 
                     subject: emailSubject, 
                     to: "maximousfr.ayoubmehanne@gmail.com"
+            }
          }
      }
 }
