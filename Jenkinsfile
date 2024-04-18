@@ -1,3 +1,4 @@
+users;
 pipeline {
     agent any 
     environment{
@@ -16,10 +17,12 @@ pipeline {
 		}
 		stage('Copy GroupMembers.sh to VM3'){
 			steps{
-        		sshagent(['ansible_key']){
-			sh "scp GroupMembers.sh root@192.168.44.21:"
-			sh "ssh -o StrictHostKeyChecking=no root@192.168.44.21 'chmod +x GroupMembers.sh'"
-            		sh "ssh -o StrictHostKeyChecking=no root@192.168.44.21 'bash GroupMembers.sh'"
+				script{
+        			sshagent(['ansible_key']){
+						sh "scp GroupMembers.sh root@192.168.44.21:"
+						sh "ssh -o StrictHostKeyChecking=no root@192.168.44.21 'chmod +x GroupMembers.sh'"
+            			users = sh(script: "ssh -o StrictHostKeyChecking=no root@192.168.44.21 'bash GroupMembers.sh'", returnStdout: true)
+					}
         		}
     		}
 		}
