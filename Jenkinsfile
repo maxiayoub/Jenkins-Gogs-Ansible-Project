@@ -58,7 +58,7 @@ def sendEmail(method, body) {
             ansiblePlaybook credentialsId: 'ansible_key', playbook: 'EmailNotify.yml', extraVars: [emailBody: body]
             break
         case "Jenkins":
-            mail to: 'maximousfr,ayoubmehanne@gmail.com', subject: "Jenkins Pipeline Notification", body: body
+            mail to: 'maximousfr.ayoubmehanne@gmail.com', subject: "Jenkins Pipeline Notification", body: body
             break
         default:
             echo "Invalid method: ${method}"
