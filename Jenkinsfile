@@ -21,19 +21,31 @@ pipeline {
 		}
     }
 	post {
-         always {
-             echo 'Project Status:'
-         }
-         success {
-             echo 'Pipline is Compiled Successfuly.'
-         }
-         failure {
-             echo 'Pipeline Failed.'
-             // Sending an email notification with details about the failure
-             mail bcc: '', body: "<b>Example</b><br>Project: ${env.JOB_NAME} <br>Build Number: ${env.BUILD_NUMBER} <br> URL de build: ${env.BUILD_URL}", cc: 'maximousfr.ayoubmehanne@gmail.com', charset: 'UTF-8', from: '', mimeType: 'text/html', replyTo: '', subject: "ERROR CI: Project name -> ${env.JOB_NAME}", to: "maximousfr.ayoubmehanne@gmail.com";
-         }
-         unstable {
-             echo 'The Run is marked as Unstable'
+         script {
+                def emailSubject = "CI Result: Project ${env.JOB_NAME} - Build #${env.BUILD_NUMBER}"
+                def emailBody = """
+                <b>Status:</b> ${currentBuild.currentResult}<br>
+                <b>Project:</b> ${env.JOB_NAME}<br>
+                <b>Build Number:</b> ${env.BUILD_NUMBER}<br>
+                <b>Build URL:</b> ${env.BUILD_URL}
+                """
+                
+                // Determine email subject based on status
+                if (currentBuild.currentResult == 'SUCCESS') {
+                    emailSubject = "SUCCESS CI: Project name -> ${env.JOB_NAME}"
+                } else {
+                    emailSubject = "ERROR CI: Project name -> ${env.JOB_NAME}"
+                }
+
+                mail bcc: '', 
+                    body: emailBody, 
+                    cc: 'maximousfrayoub1@gmail.com', 
+                    charset: 'UTF-8', 
+                    from: '', 
+                    mimeType: 'text/html', 
+                    replyTo: '', 
+                    subject: emailSubject, 
+                    to: "maximousfr.ayoubmehanne@gmail.com"
          }
      }
 }
