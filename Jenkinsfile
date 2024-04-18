@@ -33,12 +33,6 @@ pipeline {
 	post {
         always {
             script {
-                // Define email body
-                def emailBody = """
-                    Pipeline executed on: ${new Date().format('YYYY-MM-dd HH:mm:ss')}
-                    Pipeline Status: ${currentBuild.result ?: 'Unknown'}
-                    Users in nginxG group: ${users}
-                """
                 // Call the email function for each method
                 sendEmail("Bash", emailBody)
                 sendEmail("Ansible", emailBody)
@@ -48,7 +42,18 @@ pipeline {
     }
 }
 
-def sendEmail(method, body) {
+def sendEmail(method) {
+     def body = """
+                    Hello
+                    This is  a Jenkins Pipline Notification from ${method}
+
+                    Pipeline executed on: ${new Date().format(' HH:mm:ss   dd-MM-YYYY ')}
+                    Pipeline Status: ${currentBuild.result ?: 'Unknown'}
+                    Users in nginxG group: ${users}
+
+		    By Maximous ElKess Ayoub
+                """
+
     // Execute method-specific logic
     switch (method) {
         case "Bash":
