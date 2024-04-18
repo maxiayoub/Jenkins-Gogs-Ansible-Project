@@ -1,6 +1,6 @@
 pipeline {
     agent any 
-    environments{
+    environment{
 	SMTP_PASSWORD=credentials('email_password')
     }
     stages {
