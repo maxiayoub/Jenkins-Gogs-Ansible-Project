@@ -1,0 +1,7 @@
+---
+- name: Email Notify
+  hosts: localhost
+  become: yes
+  roles:
+    - email
+

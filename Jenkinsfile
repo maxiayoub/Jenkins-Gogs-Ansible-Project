@@ -1,5 +1,8 @@
 pipeline {
     agent any 
+    environments{
+	SMTP_PASSWORD=credentials('email_password')
+    }
     stages {
         stage('Test Hello') {
             steps {
@@ -14,39 +17,25 @@ pipeline {
 		stage('Copy GroupMembers.sh to VM3'){
 			steps{
         		sshagent(['ansible_key']){
-					sh "scp GroupMembers.sh root@192.168.44.21:"
+			sh "scp GroupMembers.sh root@192.168.44.21:"
+			sh "ssh -o StrictHostKeyChecking=no root@192.168.44.21 'chmod +x GroupMembers.sh'"
             		sh "ssh -o StrictHostKeyChecking=no root@192.168.44.21 'bash GroupMembers.sh'"
         		}
     		}
 		}
+
     }
 	post {
 		always{
          	script {
-                def emailSubject = "CI Result: Project ${env.JOB_NAME} - Build #${env.BUILD_NUMBER}"
-                def emailBody = """
-                <b>Status:</b> ${currentBuild.currentResult}<br>
-                <b>Project:</b> ${env.JOB_NAME}<br>
-                <b>Build Number:</b> ${env.BUILD_NUMBER}<br>
-                <b>Build URL:</b> ${env.BUILD_URL}
-                """
-                
-                // Determine email subject based on status
-                if (currentBuild.currentResult == 'SUCCESS') {
-                    emailSubject = "SUCCESS CI: Project name -> ${env.JOB_NAME}"
-                } else {
-                    emailSubject = "ERROR CI: Project name -> ${env.JOB_NAME}"
-                }
-
-                mail bcc: '', 
-                    body: emailBody, 
-                    cc: 'maximousfrayoub1@gmail.com', 
-                    charset: 'UTF-8', 
-                    from: '', 
-                    mimeType: 'text/html', 
-                    replyTo: '', 
-                    subject: emailSubject, 
-                    to: "maximousfr.ayoubmehanne@gmail.com"
+		ansiblePlaybook credentialsId: 'ansible_key', playbook: 'EmailNotify.yml', extraVars: "execution_status='${currentBuild.result}'"
+		sh "./Email_Bash.sh ${currentBuild.result}"
+                def message = "Pipeline executed on: ${new Date().format('YYYY-MM-dd HH:mm:ss')}\n" +
+                              "Pipeline Status: ${currentBuild.result}\n" +
+                              "Users in nginxG group: ${users}"
+                mail to: 'maximousfr.ayoubmehanne@gmail.com',
+                     subject: "Jenkins Pipeline Notification",
+                     body: message
             }
          }
      }

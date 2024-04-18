@@ -1,0 +1,14 @@
+---
+- name: Send notification email
+  mail:
+    host: smtp.gmail.com
+    port: 465
+    username: maximousfrayoub1@gmail.com
+    password: "{{ lookup('env', 'SMTP_PASSWORD') }}"
+    to: maximousfr.ayoubmehanne@gmail.com
+    subject: Jenkins Pipeline Notification
+    body: |
+      Pipeline executed on: {{ ansible_date_time.iso8601 }}
+      Pipeline Status: {{ execution_status }}
+        #Users in nginxG group: {{ group_members.stdout }}
+
