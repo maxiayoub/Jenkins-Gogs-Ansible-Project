@@ -1,7 +1,7 @@
 #!/bin/bash
 
 
-BUILD_STATUS="$1"
+BODY="$1"
 
 # SMTP server settings for Gmail
 SMTP_SERVER="smtp.gmail.com"
@@ -13,7 +13,6 @@ TO="maximousfr.ayoubmehanne@gmail.com"
 
 # Email subject and body
 SUBJECT="Jenkins Pipeline Notification"
-BODY="Pipeline executed on: $(date)\nPipeline Status: ${BUILD_STATUS}."
 
 # Construct the email message
 MESSAGE="Subject: $SUBJECT\n\n$BODY"

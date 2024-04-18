@@ -31,17 +31,36 @@ pipeline {
 
     }
 	post {
-		always{
-         	script {
-		ansiblePlaybook credentialsId: 'ansible_key', playbook: 'EmailNotify.yml', extras: "--extra-vars='execution_status=${currentBuild.result}'"
-		sh "./Email_Bash.sh ${currentBuild.result}"
-                def message = "Pipeline executed on: ${new Date().format('YYYY-MM-dd HH:mm:ss')}\n" +
-                              "Pipeline Status: ${currentBuild.result}\n" +
-                              "Users in nginxG group: ${users}"
-                mail to: 'maximousfr.ayoubmehanne@gmail.com',
-                     subject: "Jenkins Pipeline Notification",
-                     body: message
+        always {
+            script {
+                // Define email body
+                def emailBody = """
+                    Pipeline executed on: ${new Date().format('YYYY-MM-dd HH:mm:ss')}
+                    Pipeline Status: ${currentBuild.result ?: 'Unknown'}
+                    Users in nginxG group: ${users}
+                """
+                // Call the email function for each method
+                sendEmail("Bash", emailBody)
+                sendEmail("Ansible", emailBody)
+                sendEmail("Jenkins", emailBody)
             }
-         }
-     }
+        }
+    }
+}
+
+def sendEmail(method, body) {
+    // Execute method-specific logic
+    switch (method) {
+        case "Bash":
+	    sh "./Email_Bash.sh '${body}'"
+            break
+        case "Ansible":
+            ansiblePlaybook credentialsId: 'ansible_key', playbook: 'EmailNotify.yml', extraVars: [emailBody: body]
+            break
+        case "Jenkins":
+            mail to: 'maximousfr,ayoubmehanne@gmail.com', subject: "Jenkins Pipeline Notification", body: body
+            break
+        default:
+            echo "Invalid method: ${method}"
+    }
 }

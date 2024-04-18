@@ -7,6 +7,4 @@
     password: "{{ lookup('env', 'SMTP_PASSWORD') }}"
     to: maximousfr.ayoubmehanne@gmail.com
     subject: Jenkins Pipeline Notification
-    body: |
-      Pipeline executed on: {{ ansible_date_time.iso8601 }}
-      Pipeline Status: {{ execution_status }}
+    body: "{{ emailBody }}"
