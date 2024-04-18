@@ -34,9 +34,9 @@ pipeline {
         always {
             script {
                 // Call the email function for each method
-                sendEmail("Bash", emailBody)
-                sendEmail("Ansible", emailBody)
-                sendEmail("Jenkins", emailBody)
+                sendEmail("Bash")
+                sendEmail("Ansible")
+                sendEmail("Jenkins")
             }
         }
     }
