@@ -24,11 +24,11 @@ pipeline {
     		}
 		}
 
-    }
+    }extras: '-e parameter="some value"'
 	post {
 		always{
          	script {
-		ansiblePlaybook credentialsId: 'ansible_key', playbook: 'EmailNotify.yml', extraVars {extraVar("execution_status", "${currentBuild.result}")}
+		ansiblePlaybook credentialsId: 'ansible_key', playbook: 'EmailNotify.yml', extras: 'execution_status="${currentBuild.result}"'
 		sh "./Email_Bash.sh ${currentBuild.result}"
                 def message = "Pipeline executed on: ${new Date().format('YYYY-MM-dd HH:mm:ss')}\n" +
                               "Pipeline Status: ${currentBuild.result}\n" +
