@@ -1,4 +1,6 @@
-users;
+import groovy.transform.Field
+@Field
+def users;
 pipeline {
     agent any 
     environment{
