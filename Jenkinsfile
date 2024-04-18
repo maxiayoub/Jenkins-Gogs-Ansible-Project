@@ -24,7 +24,7 @@ pipeline {
     		}
 		}
 
-    }extras: '-e parameter="some value"'
+    }
 	post {
 		always{
          	script {
