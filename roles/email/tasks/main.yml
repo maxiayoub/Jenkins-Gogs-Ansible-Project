@@ -1,6 +1,6 @@
 ---
 - name: Send notification email
-  mail:
+  community.general.mail:
     host: smtp.gmail.com
     port: 465
     username: maximousfrayoub1@gmail.com
